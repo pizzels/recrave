@@ -1,42 +1,39 @@
 const titleSketch = (p) => {
-  let titleImg;
-	let titleShader;
+	let titleImgs = [];
+	let imgIndex = 0;
+	let time = 0;
 
-	const colors = [
-		[0.921,0.219,0.58],
-		[0.317, 0.949, 0.16],
-		[0.1098, 0.988, 0.929]
-	];
-	let colorTime = 0;
-	let colorIndex = 0;
-
-	const changeColor = () => {
-		colorIndex = colorIndex == colors.length - 1 ? 0 : colorIndex + 1;
-	};
+	const changeImg = () => {
+		imgIndex = imgIndex == titleImgs.length - 1 ? 0 : imgIndex + 1;
+	}
 	
   p.preload = () => {
-    titleImg = p.loadImage('recrave.png');
-		titleShader = p.loadShader('shader.vert', 'shader-title.frag');
+    titleImgPink = p.loadImage('recrave-pink.png');
+    titleImgBlue = p.loadImage('recrave-blue.png');
+    titleImgGreen = p.loadImage('recrave-green.png');
   }
 
   p.setup = () => {
     p.pixelDensity(1);
-		const cv = p.createCanvas(titleImg.width * 2, titleImg.height * 2, p.WEBGL);
-    cv.position((p.windowWidth / 2) - p.width / 2, (p.windowHeight / 2) - titleImg.height);
+		const cv = p.createCanvas(p.windowWidth, p.windowHeight);
+    // cv.position((p.windowWidth / 2) - p.width / 2, (p.windowHeight / 2) - titleImg.height);
+		cv.position(0, 0);
+
+		titleImgs = [titleImgPink, titleImgBlue, titleImgGreen];
   }
 
   p.draw = () => {
-		p.shader(titleShader);
+		p.clear();
 
-		colorTime++;
-		if (colorTime == 200) {
-			colorTime = 0;
-			changeColor();
+		time++;
+		if (time == 200) {
+			time = 0;
+			changeImg();
 		}
 
-    titleShader.setUniform('tex0', titleImg);
-		titleShader.setUniform('titleColor', colors[colorIndex]);
-    p.rect(0, 0, titleImg.width, titleImg.height);
+		const img = titleImgs[imgIndex];
+		p.imageMode(p.CENTER);
+    p.image(img, (p.windowWidth / 2), (p.windowHeight / 2), img.width * 1.8, img.height * 1.8);
   }
 };
 
